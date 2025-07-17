@@ -17,7 +17,7 @@ export default function Sidebar() {
 
     return (
         <div className="h-screen w-64 bg-[#0a0a0a] text-white flex flex-col p-6 shadow-lg">
-            <h1 className="text-2xl font-bold mb-8 text-white">MyApp</h1>
+            <h1 className="text-lg md:text-2xl font-bold mb-8 text-white">MyApp</h1>
 
             <nav className="flex flex-col gap-4">
                 <NavItem icon={<FaHome />} label="Home" dest="/" />
@@ -50,7 +50,7 @@ function NavItem({ icon, label, dest }) {
             className="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-[#1a1a1a] px-4 py-2 rounded transition duration-200"
         >
             {icon}
-            <span className="font-medium">{label}</span>
+            <span className="font-medium hidden md:block">{label}</span>
         </Link>
     );
 }

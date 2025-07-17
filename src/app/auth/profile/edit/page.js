@@ -27,7 +27,6 @@ export default function EditProfilePage() {
 
         const formData = new FormData();
         formData.append('userName', userName);
-        formData.append('userId', user._id);
         if (selectedFile) {
             formData.append('image', selectedFile);
         }

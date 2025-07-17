@@ -102,7 +102,7 @@ export const login = async (req) => {
 export const logout = async (req) => {
     try {
         const cookieStore = await cookies();
-        cookieStore.set("token", '');
+        cookieStore.delete("token");
         return NextResponse.json(
             { message: 'Logged out successfully' },
             { status: 200 }
@@ -114,25 +114,25 @@ export const logout = async (req) => {
             { status: 500 }
         );
     }
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+    });
+    res.status(200).json({ message: "logout successfull" });
 }
 
 // check Auth
 export const checkAuth = async (req) => {
     try {
-        await connectDB();
+        const userId = req.headers.get('userId');
 
-        const cookieStore = await cookies();
-        const token = cookieStore.get('token')?.value;
-
-        if (!token) {
-            return NextResponse.json({ message: 'Not authenticated' }, { status: 401 });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const user = await User.findById(decoded.id).select('-password');
+        const user = await User.findById(userId).select("-password");
         if (!user) {
-            return NextResponse.json({ message: 'User not found' }, { status: 401 });
+            return NextResponse.json(
+                { message: "User not found" },
+                { status: 404 }
+            );
         }
 
         return NextResponse.json({ user }, { status: 200 });
@@ -149,10 +149,10 @@ export const editProfile = async (req) => {
 
         const formData = await req.formData();
 
-        const userId = formData.get('userId');
+        const userId = req.headers.get('userId');
         const userName = formData.get('userName').trim();
 
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select("-password");;
         if (!user) {
             return NextResponse.json(
                 { message: "User not found" },

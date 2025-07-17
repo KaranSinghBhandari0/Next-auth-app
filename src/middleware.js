@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const protectedRoutes = ["/auth/profile", "/auth/profile/edit"];
+const protectedRoutes = ["/auth/profile", "/auth/profile/edit", "/api/auth/editProfile"];
 const authPages = ["/auth/login", "/auth/signup"];
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -13,7 +12,7 @@ export async function middleware(req) {
 
     let user = null;
 
-    if (token) {
+    if(token) {
         try {
             const { payload } = await jwtVerify(token, secret);
             user = payload;
@@ -32,5 +31,17 @@ export async function middleware(req) {
         return NextResponse.redirect(new URL("/", req.url));
     }
 
-    return NextResponse.next();
+    // Create response and attach user in headers
+    const requestHeaders = new Headers(req.headers);
+    if(user) {
+        requestHeaders.set("userId", user.id);
+    }
+
+    const res = NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
+
+    return res;
 }

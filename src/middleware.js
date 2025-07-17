@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const protectedRoutes = ["/auth/profile"];
+const protectedRoutes = ["/auth/profile", "/auth/profile/edit"];
 const authPages = ["/auth/login", "/auth/signup"];
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-export async function middleware(req: NextRequest) {
+export async function middleware(req) {
     const token = req.cookies.get("token")?.value;
     const { pathname } = req.nextUrl;
 

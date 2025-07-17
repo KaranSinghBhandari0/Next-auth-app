@@ -14,7 +14,7 @@ export default function SignupPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        signup({ userName, email, password });
+        await signup({ userName, email, password });
         setLoading(false);
     };
 

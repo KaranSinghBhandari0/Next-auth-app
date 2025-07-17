@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema({
         required: [true, "Name is required"],
         trim: true,
     },
+    imageUrl: {
+        type: String,
+    },
+    cloudinary_id: {
+        type: String,
+    },
     email: {
         type: String,
         required: [true, "Email is required"],

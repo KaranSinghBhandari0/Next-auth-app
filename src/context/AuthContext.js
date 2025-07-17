@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }) => {
     const login = async (formData) => {
         try {
             const res = await axios.post('/api/auth/login', formData);
-            console.log(res.data.user);
             setUser(res.data.user);
             toast.success(res.data.message);
             router.push('/');
@@ -44,7 +43,6 @@ export const AuthProvider = ({ children }) => {
     const signup = async (formData) => {
         try {
             const res = await axios.post('/api/auth/signup', formData);
-            console.log(res.data.user);
             setUser(res.data.user);
             toast.success(res.data.message);
             router.push('/');
@@ -68,9 +66,21 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    // update profile
+    const updateProfile = async (formData) => {
+        try {
+            const res = await axios.put('/api/auth/editProfile', formData);
+            setUser(res.data.user);
+            toast.success(res.data.message);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || "Server Error");
+        }
+    }
+
     return (
         <AuthContext.Provider value={{
-            login, signup, logout, checkAuth,
+            login, signup, logout, checkAuth, updateProfile,
             user, checkingAuth
         }}>
             {children}
